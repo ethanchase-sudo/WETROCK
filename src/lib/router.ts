@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 
-// Automatically gets your base path (/WETROCK) from Vite's base config
 const BASE_PATH = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 function normalizePath(pathname: string): string {
@@ -21,7 +20,6 @@ export function useRouter() {
   }, []);
 
   const navigate = useCallback((to: string) => {
-    // Add the base path (/WETROCK) when pushing to browser history
     const fullTarget = `${BASE_PATH}${to.startsWith('/') ? to : '/' + to}`;
     const currentNormalized = normalizePath(window.location.pathname);
 
