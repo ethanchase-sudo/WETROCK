@@ -5,7 +5,7 @@ import { fileURLToPath, URL } from 'node:url';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/WETROCK-main/', // Replace WETROCK-main with your exact GitHub repository name
+  base: '/WETROCK/', // Updated to match your exact repository name
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
