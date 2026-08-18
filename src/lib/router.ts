@@ -1,20 +1,36 @@
 import { useState, useEffect, useCallback } from 'react';
 
+// Automatically gets your base path (/WETROCK) from Vite's base config
+const BASE_PATH = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+function normalizePath(pathname: string): string {
+  if (BASE_PATH && pathname.startsWith(BASE_PATH)) {
+    const stripped = pathname.slice(BASE_PATH.length);
+    return stripped === '' ? '/' : stripped;
+  }
+  return pathname || '/';
+}
+
 export function useRouter() {
-  const [path, setPath] = useState(window.location.pathname);
+  const [path, setPath] = useState(() => normalizePath(window.location.pathname));
 
   useEffect(() => {
-    const onPop = () => setPath(window.location.pathname);
+    const onPop = () => setPath(normalizePath(window.location.pathname));
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, []);
 
   const navigate = useCallback((to: string) => {
-    if (to === window.location.pathname) {
+    // Add the base path (/WETROCK) when pushing to browser history
+    const fullTarget = `${BASE_PATH}${to.startsWith('/') ? to : '/' + to}`;
+    const currentNormalized = normalizePath(window.location.pathname);
+
+    if (to === currentNormalized) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
-    window.history.pushState({}, '', to);
+
+    window.history.pushState({}, '', fullTarget);
     setPath(to);
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, []);
